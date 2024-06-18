@@ -1,0 +1,26 @@
+version: 0.2
+
+env:
+  variables:
+    TABLE_NAME: "TwitterAutomation"
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - pip install aws-sam-cli
+  build:
+    commands:
+      - cd lambda
+      - pip install -r requirements.txt -t .
+      - cd ..
+      - sam build
+  post_build:
+    commands:
+      - sam package --output-template-file packaged.yaml --s3-bucket eso-cicd-artifacts
+      - sam deploy --template-file packaged.yaml --stack-name tweet-posting-stack --capabilities CAPABILITY_IAM --parameter-overrides Region=$AWS_REGION AccountID=$AWS_ACCOUNT_ID TwitterConsumerKey=$TWITTER_CONSUMER_KEY TwitterConsumerSecret=$TWITTER_CONSUMER_SECRET TwitterAccessToken=$TWITTER_ACCESS_TOKEN TwitterAccessTokenSecret=$TWITTER_ACCESS_TOKEN_SECRET
+
+artifacts:
+  files:
+    - packaged.yaml

@@ -1,0 +1,86 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM Template for Tweet Posting Lambda and Step Functions
+
+Parameters:
+  Region:
+    Type: String
+    Description: "The AWS region where the resources will be deployed"
+  AccountID:
+    Type: String
+    Description: "The AWS account ID where the resources will be deployed"
+  TwitterConsumerKey:
+    Type: String
+    Description: "Twitter API Consumer Key"
+  TwitterConsumerSecret:
+    Type: String
+    Description: "Twitter API Consumer Secret"
+  TwitterAccessToken:
+    Type: String
+    Description: "Twitter API Access Token"
+  TwitterAccessTokenSecret:
+    Type: String
+    Description: "Twitter API Access Token Secret"
+
+Resources:
+  PostTweetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: post_tweet.lambda_handler
+      Runtime: python3.8
+      CodeUri: lambda/
+      MemorySize: 128
+      Timeout: 900
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - PolicyName: LambdaParameterStoreAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ssm:GetParameter"
+                  - "ssm:GetParameters"
+                Resource: 
+                  - !Sub "arn:aws:ssm:${Region}:${AccountID}:parameter/twitter/*"
+      Environment:
+        Variables:
+          TABLE_NAME: TwitterAutomation
+          CONSUMER_KEY: !Ref TwitterConsumerKey
+          CONSUMER_SECRET: !Ref TwitterConsumerSecret
+          ACCESS_TOKEN: !Ref TwitterAccessToken
+          ACCESS_TOKEN_SECRET: !Ref TwitterAccessTokenSecret
+
+  TweetPostingStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString: 
+        Fn::Sub: |
+          {
+            "Comment": "A workflow to post tweets at random intervals between 1-6 hours, avoiding 1-6 AM PST.",
+            "StartAt": "CheckAndPostTweet",
+            "States": {
+              "CheckAndPostTweet": {
+                "Type": "Task",
+                "Resource": "${PostTweetFunction.Arn}",
+                "InputPath": "$",
+                "ResultPath": "$.tweetResult",
+                "Next": "WaitInterval"
+              },
+              "WaitInterval": {
+                "Type": "Wait",
+                "SecondsPath": "$.tweetResult.body.wait_time",
+                "Next": "CheckAndPostTweet"
+              }
+            }
+          }
+      RoleArn: !Sub "arn:aws:iam::${AccountID}:role/service-role/StepFunctionsServiceRole"
+
+Outputs:
+  PostTweetFunction:
+    Description: "PostTweet Lambda Function ARN"
+    Value: !GetAtt PostTweetFunction.Arn
+  TweetPostingStateMachine:
+    Description: "Tweet Posting Step Functions State Machine ARN"
+    Value: !Ref TweetPostingStateMachine
+    
