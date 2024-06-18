@@ -15,10 +15,10 @@ phases:
       - cd lambda
       - pip install -r requirements.txt -t .
       - cd ..
-      - sam build
+      - sam build -t template.yaml
   post_build:
     commands:
-      - sam package --output-template-file packaged.yaml --s3-bucket eso-cicd-artifacts
+      - sam package --template-file template.yaml --output-template-file packaged.yaml
       - sam deploy --template-file packaged.yaml --stack-name tweet-posting-stack --capabilities CAPABILITY_IAM --parameter-overrides Region=$AWS_REGION AccountID=$AWS_ACCOUNT_ID TwitterConsumerKey=$TWITTER_CONSUMER_KEY TwitterConsumerSecret=$TWITTER_CONSUMER_SECRET TwitterAccessToken=$TWITTER_ACCESS_TOKEN TwitterAccessTokenSecret=$TWITTER_ACCESS_TOKEN_SECRET
 
 artifacts:
