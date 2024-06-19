@@ -33,16 +33,14 @@ Resources:
       Timeout: 900
       Policies:
         - AmazonDynamoDBFullAccess
-        - PolicyName: LambdaParameterStoreAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ssm:GetParameter"
-                  - "ssm:GetParameters"
-                Resource: 
-                  - !Sub "arn:aws:ssm:${Region}:${AccountID}:parameter/twitter/*"
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - "ssm:GetParameter"
+                - "ssm:GetParameters"
+              Resource: 
+                - !Sub "arn:aws:ssm:${Region}:${AccountID}:parameter/twitter/*"
       Environment:
         Variables:
           TABLE_NAME: TwitterAutomation
