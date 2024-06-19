@@ -18,7 +18,7 @@ phases:
       - sam build -t template.yaml
   post_build:
     commands:
-      - sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket $CODEPIPELINE_BUCKET --s3-prefix lambda
+      - sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket codepipeline-us-east-1-179093572111 --s3-prefix lambda
       - sam deploy --template-file packaged.yaml --stack-name tweet-posting-stack --capabilities CAPABILITY_IAM --parameter-overrides \
           ParameterKey=Region,ParameterValue=$AWS_REGION \
           ParameterKey=AccountID,ParameterValue=$AWS_ACCOUNT_ID \
