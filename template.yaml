@@ -72,7 +72,7 @@ Resources:
               }
             }
           }
-      RoleArn: !Sub "arn:aws:iam::${AccountID}:role/service-role/StepFunctionsServiceRole"
+      RoleArn: !Sub "arn:aws:iam::${AccountID}:role/StepFunctionsServiceRole"
 
 Outputs:
   PostTweetFunction:
