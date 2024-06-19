@@ -13,10 +13,10 @@ def get_secret(parameter_name):
     return response['Parameter']['Value']
 
 # Fetch Twitter API credentials from Parameter Store
-consumer_key = get_secret('/twitter/consumer_key')
-consumer_secret = get_secret('/twitter/consumer_secret')
-access_token = get_secret('/twitter/access_token')
-access_token_secret = get_secret('/twitter/access_token_secret')
+consumer_key = get_secret('/twitter/feral/consumer_key')
+consumer_secret = get_secret('/twitter/feral/consumer_secret')
+access_token = get_secret('/twitter/feral/access_token')
+access_token_secret = get_secret('/twitter/feral/access_token_secret')
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)

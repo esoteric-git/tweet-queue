@@ -19,7 +19,7 @@ phases:
   post_build:
     commands:
       - sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket codepipeline-us-east-1-179093572111 --s3-prefix lambda
-      - sam deploy --template-file packaged.yaml --stack-name tweet-posting-stack --capabilities CAPABILITY_IAM --parameter-overrides \
+      - sam deploy --template-file packaged.yaml --stack-name tweet-posting-stack --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND --parameter-overrides \
           ParameterKey=Region,ParameterValue=$AWS_REGION \
           ParameterKey=AccountID,ParameterValue=$AWS_ACCOUNT_ID \
           ParameterKey=TwitterConsumerKey,ParameterValue=$TWITTER_CONSUMER_KEY \
