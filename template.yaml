@@ -78,8 +78,7 @@ Resources:
               "WaitInterval": {
                 "Type": "Wait",
                 "SecondsPath": "$.waitResult.body.wait_time",
-                "Next": "CheckAndPostTweet",
-                "End": true
+                "Next": "CheckAndPostTweet"
               }
             }
           }
