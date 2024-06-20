@@ -76,7 +76,9 @@ def lambda_handler(event, context):
     client.create_tweet(text=tweet['tweet'])
     table.update_item(
         Key={'id': tweet['id']},
-        UpdateExpression='SET posted = :val1, timestamp = :val2',
+        #UpdateExpression='SET posted = :val1, timestamp = :val2',
+        UpdateExpression='SET posted = :val1, #ts = :val2',
+        ExpressionAttributeNames={'#ts': 'timestamp'},
         ExpressionAttributeValues={
             ':val1': True,
             ':val2': str(datetime.now())
