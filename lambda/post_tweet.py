@@ -50,10 +50,11 @@ def lambda_handler(event, context):
     if not is_within_posting_hours():
         return {
             'statusCode': 200,
-            'body': json.dumps({
+            # 'body': json.dumps({
+            'body': {
                 'message': 'Outside posting hours.',
                 'wait_time': wait_time
-            })
+            }
         }
     
     response = table.scan(
@@ -65,10 +66,11 @@ def lambda_handler(event, context):
     if not tweets:
         return {
             'statusCode': 200,
-            'body': json.dumps({
+            # 'body': json.dumps({
+            'body': {
                 'message': 'No tweets to post.',
                 'wait_time': wait_time
-            })
+            }
         }
     
     tweet = tweets[0]
@@ -87,8 +89,9 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        'body': json.dumps({
+        # 'body': json.dumps({
+        'body': {
             'message': 'Tweet posted successfully!',
             'wait_time': wait_time
-        })
+        }
     }
