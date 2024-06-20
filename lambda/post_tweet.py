@@ -52,10 +52,11 @@ def lambda_handler(event, context):
         return {
             'statusCode': 200,
             'body': {
+                'message': 'Wait time calculated.',
                 'wait_time': wait_time
             }
         }
-
+    
     wait_time = calculate_wait_time()
     if not is_within_posting_hours():
         return {
@@ -97,6 +98,6 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': {
             'message': 'Tweet posted successfully!',
-            'wait_time': wait_time
+                'wait_time': wait_time
         }
     }
