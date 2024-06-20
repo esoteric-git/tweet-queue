@@ -63,11 +63,6 @@ Resources:
                 "Resource": "${PostTweetFunction.Arn}",
                 "InputPath": "$",
                 "ResultPath": "$.tweetResult",
-                "Next": "WaitInterval"
-              },
-              "WaitInterval": {
-                "Type": "Wait",
-                "SecondsPath": "$.tweetResult.body.wait_time",
                 "Next": "CalculateWaitTime"
               },
               "CalculateWaitTime": {
@@ -75,10 +70,12 @@ Resources:
                 "Resource": "${PostTweetFunction.Arn}",
                 "InputPath": "$",
                 "ResultPath": "$.tweetResult",
-                "Parameters": {
-                  "task": "calculate_wait_time"
-                },
-                "Next": "CheckAndPostTweet"
+                "Next": "WaitInterval"
+              },
+              "WaitInterval": {
+                "Type": "Wait",
+                "SecondsPath": "$.tweetResult.body.wait_time",
+                "End": true
               }
             }
           }
