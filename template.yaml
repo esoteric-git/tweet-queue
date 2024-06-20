@@ -73,12 +73,26 @@ Resources:
                 "Parameters": {
                   "task": "calculate_wait_time"
                 },
-                "Next": "WaitInterval"
+                "Next": "LoopChoice"
+              },
+              "LoopChoice": {
+                "Type": "Choice",
+                "Choices": [
+                  {
+                    "Variable": "$.waitResult.body.continue",
+                    "BooleanEquals": true,
+                    "Next": "WaitInterval"
+                  }
+                ],
+                "Default": "EndState"
               },
               "WaitInterval": {
                 "Type": "Wait",
                 "SecondsPath": "$.waitResult.body.wait_time",
                 "Next": "CheckAndPostTweet"
+              },
+              "EndState": {
+                "Type": "Succeed"
               }
             }
           }
