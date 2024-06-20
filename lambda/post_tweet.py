@@ -43,14 +43,23 @@ def calculate_wait_time():
     if 1 <= next_run_time.hour < 6:
         extra_wait = (6 - next_run_time.hour) * 60 * 60
         wait_time += extra_wait
+    print(f"Calculated wait_time: {wait_time} seconds")
     return wait_time
 
 def lambda_handler(event, context):
+    if event.get('task') == 'calculate_wait_time':
+        wait_time = calculate_wait_time()
+        return {
+            'statusCode': 200,
+            'body': {
+                'wait_time': wait_time
+            }
+        }
+
     wait_time = calculate_wait_time()
     if not is_within_posting_hours():
         return {
             'statusCode': 200,
-            # 'body': json.dumps({
             'body': {
                 'message': 'Outside posting hours.',
                 'wait_time': wait_time
@@ -66,7 +75,6 @@ def lambda_handler(event, context):
     if not tweets:
         return {
             'statusCode': 200,
-            # 'body': json.dumps({
             'body': {
                 'message': 'No tweets to post.',
                 'wait_time': wait_time
@@ -74,11 +82,9 @@ def lambda_handler(event, context):
         }
     
     tweet = tweets[0]
-    #api.update_status(tweet['tweet'])
     client.create_tweet(text=tweet['tweet'])
     table.update_item(
         Key={'id': tweet['id']},
-        #UpdateExpression='SET posted = :val1, timestamp = :val2',
         UpdateExpression='SET posted = :val1, #ts = :val2',
         ExpressionAttributeNames={'#ts': 'timestamp'},
         ExpressionAttributeValues={
@@ -89,7 +95,6 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        # 'body': json.dumps({
         'body': {
             'message': 'Tweet posted successfully!',
             'wait_time': wait_time

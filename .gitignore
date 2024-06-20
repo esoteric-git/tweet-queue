@@ -1,8 +1,17 @@
 # Ignore the virtual environment directory
 venv/
 
+# Ignore the backups directory
+backups/
+
+# Ignore dotenv
+.env
+
 # Ignore the test script
 test_tweet.py
+
+# Ignore the dynamo sync script
+sync_tweets.sh
 
 # Ignore other Python cache files and folders
 __pycache__/

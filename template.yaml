@@ -68,7 +68,17 @@ Resources:
               "WaitInterval": {
                 "Type": "Wait",
                 "SecondsPath": "$.tweetResult.body.wait_time",
-                "End": true
+                "Next": "CalculateWaitTime"
+              },
+              "CalculateWaitTime": {
+                "Type": "Task",
+                "Resource": "${PostTweetFunction.Arn}",
+                "InputPath": "$",
+                "ResultPath": "$.tweetResult",
+                "Parameters": {
+                  "task": "calculate_wait_time"
+                },
+                "Next": "CheckAndPostTweet"
               }
             }
           }
@@ -81,4 +91,3 @@ Outputs:
   TweetPostingStateMachine:
     Description: "Tweet Posting Step Functions State Machine ARN"
     Value: !Ref TweetPostingStateMachine
-    
