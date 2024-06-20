@@ -53,7 +53,8 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': {
                 'message': 'Wait time calculated.',
-                'wait_time': wait_time
+                'wait_time': wait_time,
+                'continue': True
             }
         }
     
@@ -63,7 +64,8 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': {
                 'message': 'Outside posting hours.',
-                'wait_time': wait_time
+                'wait_time': wait_time,
+                'continue': False
             }
         }
     
@@ -78,7 +80,8 @@ def lambda_handler(event, context):
             'statusCode': 200,
             'body': {
                 'message': 'No tweets to post.',
-                'wait_time': wait_time
+                'wait_time': wait_time,
+                'continue': False
             }
         }
     
@@ -98,6 +101,7 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': {
             'message': 'Tweet posted successfully!',
-                'wait_time': wait_time
+            'wait_time': wait_time,
+            'continue': True
         }
     }
