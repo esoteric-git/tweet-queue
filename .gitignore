@@ -1,0 +1,10 @@
+# Ignore the virtual environment directory
+venv/
+
+# Ignore the test script
+test_tweet.py
+
+# Ignore other Python cache files and folders
+__pycache__/
+*.py[cod]
+*.pyo

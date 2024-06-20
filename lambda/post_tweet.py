@@ -17,7 +17,12 @@ consumer_key = get_secret('/twitter/feral/consumer_key')
 consumer_secret = get_secret('/twitter/feral/consumer_secret')
 access_token = get_secret('/twitter/feral/access_token')
 access_token_secret = get_secret('/twitter/feral/access_token_secret')
+bearer_token = get_secret('/twitter/feral/bearer_token')
 
+# Create client
+client = tweepy.Client(bearer_token=bearer_token, consumer_key=consumer_key, consumer_secret=consumer_secret, access_token=access_token, access_token_secret=access_token_secret)
+
+# Authenticate using OAuthHandler
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
@@ -67,7 +72,8 @@ def lambda_handler(event, context):
         }
     
     tweet = tweets[0]
-    api.update_status(tweet['tweet'])
+    #api.update_status(tweet['tweet'])
+    client.create_tweet(text=tweet['tweet'])
     table.update_item(
         Key={'id': tweet['id']},
         UpdateExpression='SET posted = :val1, timestamp = :val2',
